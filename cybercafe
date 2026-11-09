@@ -1,1 +1,1054 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LevelUp Arcade Bar - Reserva</title>
 
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    /* ================= VARIABLES Y RESET ================= */
+    :root {
+      --bg-dark: #060714;
+      --bg-panel: #0f1226;
+      --bg-card: #141834;
+      --neon-purple: #b23aff;
+      --neon-blue: #00d2ff;
+      --neon-green: #00ff88;
+      --neon-red: #ff3366;
+      --neon-yellow: #ffcc00;
+      --text-main: #ffffff;
+      --text-muted: #8b92b6;
+      --border-color: #2a2e54;
+      --font-title: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ================= HEADER ================= */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: rgba(6, 7, 20, 0.9);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    /* Anuncio de promociones dinámico */
+    .header__promo-ad {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 204, 0, 0.1);
+      border: 1px solid var(--neon-yellow);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      max-width: 350px;
+      overflow: hidden;
+      position: relative;
+    }
+    .header__promo-ad:hover {
+      background: rgba(255, 204, 0, 0.2);
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+    }
+    .promo-marquee {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 10s linear infinite;
+    }
+    .promo-marquee span {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding-right: 40px;
+      font-family: var(--font-title);
+      letter-spacing: 1px;
+    }
+    .promo-marquee span:nth-child(even) { color: var(--neon-yellow); }
+    
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Navegación y Usuario */
+    .header__nav { display: flex; gap: 25px; align-items: center; }
+    .header__nav a {
+      color: var(--text-muted); text-decoration: none; font-weight: 600;
+      font-size: 1rem; transition: all 0.3s; display: flex; align-items: center; gap: 8px; cursor: pointer;
+    }
+    .header__nav a:hover, .header__nav a.active { color: #fff; text-shadow: 0 0 10px var(--neon-purple); }
+    .header__nav a.active {
+      background: rgba(178, 58, 255, 0.2); padding: 8px 16px;
+      border-radius: 20px; border: 1px solid var(--neon-purple);
+    }
+
+    .dropdown { position: relative; display: inline-block; }
+    .header__nav a.btn-contact {
+      background: rgba(255, 204, 0, 0.1); padding: 8px 16px; border-radius: 8px;
+      border: 2px solid var(--neon-yellow); color: #fff; box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    }
+    .header__nav a.btn-contact:hover { background: var(--neon-yellow); color: #000; text-shadow: none; }
+    .header__nav a.btn-contact i { color: var(--neon-yellow); transition: color 0.3s; }
+    .header__nav a.btn-contact:hover i { color: #000; }
+
+    .dropdown-content {
+      display: none; position: absolute; right: 0; top: 100%;
+      background-color: var(--bg-panel); min-width: 200px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+      border: 1px solid var(--neon-yellow); border-radius: 8px;
+      z-index: 1000; margin-top: 10px; overflow: hidden;
+    }
+    .dropdown-content a {
+      color: var(--text-main); padding: 12px 16px; text-decoration: none;
+      display: flex; align-items: center; gap: 10px; border-radius: 0; font-size: 0.95rem;
+    }
+    .dropdown-content a:hover { background-color: rgba(255, 204, 0, 0.15); color: var(--neon-yellow); text-shadow: none; }
+    .dropdown-content a i { color: var(--neon-yellow); width: 20px; text-align: center; }
+    .dropdown:hover .dropdown-content { display: block; animation: fadeInDown 0.3s ease forwards; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header__user { display: flex; align-items: center; }
+    .user-avatar img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--neon-blue); object-fit: cover; transition: all 0.3s; cursor: pointer; }
+    .user-avatar img:hover { box-shadow: 0 0 15px var(--neon-blue); }
+
+    /* ================= MAIN LAYOUT ================= */
+    .main-container { 
+      display: flex; flex: 1; padding: 20px 30px; gap: 30px; align-items: flex-start; 
+      position: relative; justify-content: center; max-width: 1400px; margin: 0 auto; width: 100%;
+    }
+
+    /* --- CENTER (STATIONS) --- */
+    .center-content { 
+      flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0; 
+    }
+    .stations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .station-card { display: flex; flex-direction: column; gap: 10px; }
+
+    .station-card__content {
+      background: var(--bg-panel); border-radius: 20px; border: 2px solid transparent;
+      padding: 15px; text-align: center; position: relative; cursor: pointer;
+      transition: all 0.3s ease; overflow: hidden;
+    }
+    .station-card__content::before {
+      content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 2px;
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .station-card.active .station-card__content::before { opacity: 1; }
+    .station-card.active .station-card__content { box-shadow: 0 0 20px rgba(178, 58, 255, 0.4); transform: translateY(-5px); }
+
+    .station-img { width: 100%; height: 160px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .station-card h3 { font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 5px; }
+    .station-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; }
+
+    .station-card__buttons {
+      display: flex; flex-direction: column; gap: 8px;
+      background: var(--bg-panel); padding: 10px; border-radius: 15px; border: 1px solid var(--border-color);
+    }
+
+    .btn-specs { 
+      background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); 
+      padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; width: 100%; transition: all 0.3s; 
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-specs:hover { background: var(--neon-blue); color: #000; }
+
+    .btn-rent { 
+      background: linear-gradient(90deg, rgba(178,58,255,0.3), rgba(0,210,255,0.3)); 
+      border: 1px solid var(--neon-purple); color: #fff; padding: 10px 15px; border-radius: 10px; 
+      font-family: var(--font-title); font-size: 0.9rem; font-weight: 700; cursor: pointer; 
+      width: 100%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; 
+    }
+    .btn-rent:hover { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+
+    /* ================= PANEL DERECHO (Contenedor) ================= */
+    .right-sidebar {
+      width: 320px;
+      flex-shrink: 0;
+      position: relative;
+      /* Altura mínima para que no salte el layout */
+      min-height: 400px; 
+    }
+
+    /* Calculadora (Visible por defecto) */
+    .calculator-panel { 
+      background: var(--bg-panel); border: 1px solid var(--border-color); 
+      border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 20px;
+      width: 100%; height: 100%;
+      transition: opacity 0.3s ease;
+    }
+    .calculator-panel.hidden {
+      display: none;
+    }
+
+    /* Panel de Especificaciones (Oculto por defecto, ocupa el lugar de la calculadora) */
+    .specs-panel {
+      display: none; /* Oculto inicialmente */
+      background: var(--bg-panel); border: 2px solid var(--neon-blue);
+      border-radius: 20px; padding: 20px; width: 100%; height: 100%;
+      flex-direction: column; gap: 15px;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+      animation: slideInRight 0.3s ease forwards;
+    }
+    .specs-panel.active {
+      display: flex;
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .specs-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
+    }
+    .specs-header h3 {
+      font-family: var(--font-title); color: var(--neon-blue); font-size: 1.1rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-close-specs {
+      background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
+      transition: color 0.3s;
+    }
+    .btn-close-specs:hover { color: var(--neon-red); }
+
+    /* Contenido interno de las especificaciones */
+    .specs-section {
+      background: var(--bg-card); padding: 12px;
+      border-radius: 12px; border: 1px solid var(--border-color);
+    }
+    .specs-section h4 {
+      font-family: var(--font-title); color: var(--neon-purple);
+      margin-bottom: 10px; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 6px;
+      border-bottom: 1px solid rgba(178, 58, 255, 0.2); padding-bottom: 6px;
+    }
+    .spec-row { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+    .spec-row span:first-child { color: var(--text-muted); }
+    .spec-row span:last-child { color: #fff; font-weight: 600; text-align: right; }
+
+    .games-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .game-tag {
+      background: rgba(0, 210, 255, 0.1); border: 1px solid var(--neon-blue);
+      color: #fff; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;
+    }
+
+    .includes-list { list-style: none; padding: 0; }
+    .includes-list li {
+      display: flex; align-items: flex-start; gap: 6px;
+      margin-bottom: 6px; color: var(--text-main); font-size: 0.85rem; line-height: 1.3;
+    }
+    .includes-list li i { color: var(--neon-green); font-size: 0.9rem; margin-top: 2px; }
+
+    /* Elementos de la calculadora */
+    .calculator-title { font-family: var(--font-title); font-size: 1.3rem; color: var(--neon-blue); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-weight: 600; color: var(--text-muted); font-size: 0.95rem; }
+    .custom-select { background: var(--bg-card); border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 10px; font-family: var(--font-body); font-size: 1rem; outline: none; }
+    .hours-control { display: flex; align-items: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
+    .hours-control button { background: transparent; border: none; color: #fff; font-size: 1.2rem; padding: 10px 15px; cursor: pointer; transition: background 0.3s; }
+    .hours-control button:hover { background: rgba(255,255,255,0.1); }
+    .hours-control input { flex: 1; background: transparent; border: none; color: #fff; text-align: center; font-family: var(--font-title); font-size: 1.1rem; outline: none; width: 100%; }
+    .hours-control input::-webkit-outer-spin-button, .hours-control input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .total-display { text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: auto; }
+    .total-display p { color: var(--text-muted); font-size: 1rem; margin-bottom: 5px; }
+    .total-display h2 { font-family: var(--font-title); font-size: 2.5rem; color: var(--neon-blue); text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); }
+    .btn-confirm { background: linear-gradient(90deg, var(--neon-purple), #8a2be2); border: none; color: #fff; padding: 15px; border-radius: 12px; font-family: var(--font-title); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+    .btn-confirm:hover { box-shadow: 0 0 20px var(--neon-purple); transform: scale(1.02); }
+
+    /* ================= FOOTER ================= */
+    .footer { background: #0a0b1a; border-top: 1px solid var(--border-color); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .footer__features { display: flex; gap: 30px; }
+    .feature { display: flex; align-items: center; gap: 10px; }
+    .feature i { font-size: 1.5rem; color: var(--neon-blue); }
+    .feature div h4 { font-size: 0.9rem; font-weight: 700; }
+    .feature div p { font-size: 0.75rem; color: var(--text-muted); }
+    .footer__logo { font-family: var(--font-title); font-size: 1.2rem; display: flex; align-items: center; gap: 10px; color: #fff;}
+    .footer__logo i { color: var(--neon-yellow); }
+
+    /* ================= MODALES ================= */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; }
+    .modal-content { background: var(--bg-panel); border: 2px solid var(--neon-purple); border-radius: 20px; width: 500px; padding: 30px; box-shadow: 0 0 40px rgba(178, 58, 255, 0.3); position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
+    .modal-content.selection-modal { width: 650px; text-align: left; }
+    
+    .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.3s; }
+    .modal-close:hover { color: var(--neon-red); }
+    .modal-icon { background: rgba(178, 58, 255, 0.2); width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid var(--neon-purple); color: var(--neon-purple); font-size: 1.8rem; }
+    .modal-content h3 { font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
+
+    .selection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .selection-card { background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
+    .selection-card:hover { border-color: var(--neon-purple); box-shadow: 0 0 15px rgba(178, 58, 255, 0.3); transform: translateY(-3px); }
+    .selection-card.selected { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(0, 210, 255, 0.5); background: rgba(0, 210, 255, 0.1); }
+    .selection-card.selected::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -8px; right: -8px; background: var(--neon-blue); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+    .selection-card i { font-size: 2rem; margin-bottom: 10px; color: var(--neon-purple); }
+    .selection-card h4 { font-family: var(--font-title); font-size: 1rem; margin-bottom: 5px; }
+    
+    .pc-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; font-weight: 700; }
+    .pc-status.available { background: rgba(0, 255, 136, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
+    .pc-status.occupied { background: rgba(255, 51, 102, 0.15); color: var(--neon-red); border: 1px solid var(--neon-red); }
+
+    .modal-summary { background: var(--bg-card); border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+    .summary-row { display: flex; justify-content: space-between; padding: 8px 0; color: var(--text-muted); font-size: 1rem; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row span:last-child { color: #fff; font-weight: 600; text-align: right; }
+    .summary-row i { margin-right: 8px; width: 20px; text-align: center; }
+    
+    .modal-total { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 15px; margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; }
+    .modal-total span:last-child { color: var(--neon-purple); font-family: var(--font-title); font-size: 1.5rem; }
+    .timer-box { background: rgba(255, 51, 102, 0.1); border: 1px solid var(--neon-red); color: var(--neon-red); padding: 10px; border-radius: 10px; font-family: var(--font-title); font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
+    .modal-actions { display: flex; gap: 15px; }
+    .btn-cancel { flex: 1; background: transparent; border: 1px solid var(--border-color); color: #fff; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+    .btn-cancel:hover { background: rgba(255,255,255,0.1); }
+    .btn-process { flex: 2; background: linear-gradient(90deg, var(--neon-purple), #8a2be2); border: none; color: #fff; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
+    .btn-process:hover { box-shadow: 0 0 15px var(--neon-purple); }
+
+    /* ================= TOAST ================= */
+    .toast { position: fixed; top: 20px; right: 20px; background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); border-left: 5px solid var(--neon-green); color: #fff; padding: 15px 20px; border-radius: 8px; display: none; align-items: center; gap: 15px; z-index: 2000; box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2); }
+    .toast i { font-size: 1.5rem; color: var(--neon-green); }
+    .toast h4 { font-family: var(--font-title); font-size: 1rem; }
+    .toast p { font-size: 0.85rem; color: var(--text-muted); }
+    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: 10px; }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .stations-grid { grid-template-columns: repeat(2, 1fr); }
+      .right-sidebar { width: 280px; }
+    }
+    @media (max-width: 900px) {
+      .main-container { flex-direction: column; }
+      .stations-grid { grid-template-columns: 1fr; }
+      .right-sidebar { width: 100%; min-height: auto; margin-top: 20px; }
+      .header__nav { display: none; }
+      .header__promo-ad { max-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <!-- Anuncio Dinámico -->
+    <div class="header__promo-ad" id="btnOpenPromos">
+      <div class="promo-marquee" id="promoText">
+        <span>COMBO GAMER GRATIS</span>
+        <span>2X1 EN HORAS</span>
+        <span>COMBO GAMER GRATIS</span>
+        <span>2X1 EN HORAS</span>
+      </div>
+    </div>
+
+    <nav class="header__nav">
+      <a href="#" class="active"><i class="fa-solid fa-house"></i> Inicio</a>
+      <div class="dropdown">
+        <a href="#" class="btn-contact"><i class="fa-solid fa-envelope"></i> Contacto</a>
+        <div class="dropdown-content">
+          <a href="https://wa.me/59170012345" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          <a href="tel:+59170012345"><i class="fa-solid fa-phone"></i> Llamar</a>
+          <a href="#"><i class="fa-solid fa-location-dot"></i> Ubicación</a>
+          <a href="mailto:info@levelup.com"><i class="fa-solid fa-envelope-open-text"></i> Enviar Correo</a>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="header__user">
+      <div class="user-avatar">
+        <img src="https://i.pravatar.cc/100?img=11" alt="User">
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-container">
+    
+    <main class="center-content">
+      <div class="stations-grid">
+        
+        <!-- PS5 -->
+        <div class="station-card active" data-station="ps5" data-price="40">
+          <div class="station-card__content">
+            <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?q=80&w=600&auto=format&fit=crop" class="station-img" alt="PS5">
+            <h3>PS5</h3>
+            <p>Juega como un pro</p>
+          </div>
+          <div class="station-card__buttons">
+            <button class="btn-specs" data-target="ps5"><i class="fa-solid fa-list"></i> Especificaciones</button>
+            <button class="btn-rent" data-target="modal-select-ps5"><i class="fa-regular fa-clock"></i> Rent Hour ></button>
+          </div>
+        </div>
+
+        <!-- PC -->
+        <div class="station-card" data-station="pc" data-price="50">
+          <div class="station-card__content">
+            <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=600&auto=format&fit=crop" class="station-img" alt="PC">
+            <h3>PC</h3>
+            <p>Domina la arena</p>
+          </div>
+          <div class="station-card__buttons">
+            <button class="btn-specs" data-target="pc"><i class="fa-solid fa-list"></i> Especificaciones</button>
+            <button class="btn-rent" data-target="modal-select-pc"><i class="fa-regular fa-clock"></i> Rent Hour ></button>
+          </div>
+        </div>
+
+        <!-- ARCADE -->
+        <div class="station-card" data-station="arcade" data-price="30">
+          <div class="station-card__content">
+            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop" class="station-img" alt="Arcade">
+            <h3>Arcade</h3>
+            <p>Vive la nostalgia</p>
+          </div>
+          <div class="station-card__buttons">
+            <button class="btn-specs" data-target="arcade"><i class="fa-solid fa-list"></i> Especificaciones</button>
+            <button class="btn-rent" data-target="modal-select-arcade"><i class="fa-regular fa-clock"></i> Rent Hour ></button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- PANEL DERECHO (Calculadora o Especificaciones) -->
+    <aside class="right-sidebar">
+      
+      <!-- 1. CALCULADORA (Por defecto) -->
+      <div class="calculator-panel" id="calculatorPanel">
+        <div class="calculator-title">
+          <i class="fa-solid fa-calculator"></i> Calculator
+        </div>
+
+        <div class="form-group">
+          <label>Snacks / Combos</label>
+          <select class="custom-select" id="snackSelect">
+            <option value="0">Sin snacks</option>
+            <option value="15">Combo Gamer (+15 BOB)</option>
+            <option value="10">Palomitas (+10 BOB)</option>
+            <option value="8">Bebida (+8 BOB)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-regular fa-clock"></i> Hours</label>
+          <div class="hours-control">
+            <button id="btnMinus"><i class="fa-solid fa-minus"></i></button>
+            <input type="number" id="hoursInput" value="2" min="1">
+            <button id="btnPlus"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="total-display">
+          <p>Total to Pay:</p>
+          <h2 id="totalDisplay">80 BOB</h2>
+        </div>
+
+        <button class="btn-confirm" id="btnConfirm">
+          <i class="fa-solid fa-credit-card"></i> Confirm Reservation
+        </button>
+      </div>
+
+      <!-- 2. ESPECIFICACIONES (Oculto por defecto) -->
+      <div class="specs-panel" id="specsPanel">
+        
+        <div class="specs-header">
+          <h3 id="specsTitle"><i class="fa-solid fa-list"></i> Especificaciones</h3>
+          <button class="btn-close-specs" id="btnCloseSpecs"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Contenido PS5 -->
+        <div class="panel-content" id="panel-ps5" style="display: none;">
+          <div class="specs-section">
+            <h4><i class="fa-solid fa-microchip"></i> Especificaciones</h4>
+            <div class="spec-row"><span>Consola:</span> <span>PlayStation 5 Digital</span></div>
+            <div class="spec-row"><span>Pantalla:</span> <span>Smart TV 4K 55" (120Hz)</span></div>
+            <div class="spec-row"><span>Controles:</span> <span>4 x DualSense</span></div>
+            <div class="spec-row"><span>Audio:</span> <span>Sonido envolvente 5.1</span></div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-gamepad"></i> Juegos Disponibles</h4>
+            <div class="games-tags">
+              <span class="game-tag">FIFA 24</span>
+              <span class="game-tag">Spider-Man 2</span>
+              <span class="game-tag">God of War</span>
+              <span class="game-tag">Mortal Kombat 1</span>
+              <span class="game-tag">GTA V</span>
+              <span class="game-tag">The Last of Us</span>
+            </div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-box-open"></i> ¿Qué incluye?</h4>
+            <ul class="includes-list">
+              <li><i class="fa-solid fa-circle-check"></i> Uso de la consola y accesorios.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Acceso a toda la biblioteca.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Hasta 4 controles.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Precio: 40 BOB / hora.</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contenido PC -->
+        <div class="panel-content" id="panel-pc" style="display: none;">
+          <div class="specs-section">
+            <h4><i class="fa-solid fa-microchip"></i> Especificaciones</h4>
+            <div class="spec-row"><span>Procesador:</span> <span>AMD Ryzen 7 7800X3D</span></div>
+            <div class="spec-row"><span>Gráfica:</span> <span>RTX 4070 Ti (12GB)</span></div>
+            <div class="spec-row"><span>RAM:</span> <span>32GB DDR5 6000MHz</span></div>
+            <div class="spec-row"><span>Pantalla:</span> <span>Monitor 27" 240Hz</span></div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-gamepad"></i> Juegos Disponibles</h4>
+            <div class="games-tags">
+              <span class="game-tag">Valorant</span>
+              <span class="game-tag">League of Legends</span>
+              <span class="game-tag">CS2</span>
+              <span class="game-tag">Fortnite</span>
+              <span class="game-tag">Apex Legends</span>
+              <span class="game-tag">Minecraft</span>
+            </div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-box-open"></i> ¿Qué incluye?</h4>
+            <ul class="includes-list">
+              <li><i class="fa-solid fa-circle-check"></i> Uso de PC y periféricos premium.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Acceso a juegos instalados.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Silla gamer ergonómica.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Precio: 50 BOB / hora.</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contenido ARCADE -->
+        <div class="panel-content" id="panel-arcade" style="display: none;">
+          <div class="specs-section">
+            <h4><i class="fa-solid fa-microchip"></i> Especificaciones</h4>
+            <div class="spec-row"><span>Máquina:</span> <span>Arcade Retro Bartop 2P</span></div>
+            <div class="spec-row"><span>Controles:</span> <span>2 Joysticks + 8 botones</span></div>
+            <div class="spec-row"><span>Pantalla:</span> <span>Monitor CRT 19"</span></div>
+            <div class="spec-row"><span>Audio:</span> <span>Parlantes estéreo</span></div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-gamepad"></i> Juegos Disponibles</h4>
+            <div class="games-tags">
+              <span class="game-tag">Pac-Man</span>
+              <span class="game-tag">Metal Slug</span>
+              <span class="game-tag">Street Fighter II</span>
+              <span class="game-tag">King of Fighters</span>
+              <span class="game-tag">Mortal Kombat</span>
+              <span class="game-tag">Galaga</span>
+            </div>
+          </div>
+          <div class="specs-section" style="margin-top: 10px;">
+            <h4><i class="fa-solid fa-box-open"></i> ¿Qué incluye?</h4>
+            <ul class="includes-list">
+              <li><i class="fa-solid fa-circle-check"></i> Uso de la máquina arcade.</li>
+              <li><i class="fa-solid fa-circle-check"></i> Acceso a juegos retro.</li>
+              <li><i class="fa-solid fa-circle-check"></i> 2 controles para jugar.</li>
+              <li><i class="fa-solid fa-circle-check"></i> <strong>Precio: 30 BOB / hora.</strong></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__features">
+      <div class="feature">
+        <i class="fa-solid fa-bolt"></i>
+        <div><h4>Equipos Premium</h4><p>PS5 • PC • Arcade</p></div>
+      </div>
+      <div class="feature">
+        <i class="fa-solid fa-shield-halved"></i>
+        <div><h4>Ambiente Seguro</h4><p>100% Confiable</p></div>
+      </div>
+      <div class="feature">
+        <i class="fa-solid fa-rocket"></i>
+        <div><h4>Diversión Garantizada</h4><p>Juega sin límites</p></div>
+      </div>
+    </div>
+    <div class="footer__logo">
+      <i class="fa-solid fa-crown"></i> LEVELUP <span style="font-size: 0.6rem; color: var(--text-muted);">¡TU ZONA GAMER!</span>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODALES FLOTANTES (Selección y Reserva) -->
+  <!-- ========================================== -->
+
+  <!-- MODAL DE SELECCIÓN PS5 -->
+  <div class="modal-overlay" id="modal-select-ps5">
+    <div class="modal-content selection-modal">
+      <button class="modal-close close-selection"><i class="fa-solid fa-xmark"></i></button>
+      <h3><i class="fa-brands fa-playstation" style="color: var(--neon-blue);"></i> Configurar PS5</h3>
+      
+      <div style="margin-bottom: 20px;">
+        <h4 style="color: var(--neon-purple); margin-bottom: 10px; font-family: var(--font-title);">1. Selecciona el Videojuego</h4>
+        <div class="selection-grid" id="ps5-games">
+          <div class="selection-card" data-value="FIFA 24"><i class="fa-solid fa-futbol"></i><h4>FIFA 24</h4></div>
+          <div class="selection-card" data-value="Spider-Man 2"><i class="fa-solid fa-spider"></i><h4>Spider-Man 2</h4></div>
+          <div class="selection-card" data-value="God of War Ragnarök"><i class="fa-solid fa-axe"></i><h4>God of War</h4></div>
+          <div class="selection-card" data-value="Mortal Kombat 1"><i class="fa-solid fa-dragon"></i><h4>Mortal Kombat 1</h4></div>
+          <div class="selection-card" data-value="GTA V"><i class="fa-solid fa-car"></i><h4>GTA V</h4></div>
+          <div class="selection-card" data-value="The Last of Us"><i class="fa-solid fa-virus"></i><h4>The Last of Us</h4></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <h4 style="color: var(--neon-purple); margin-bottom: 10px; font-family: var(--font-title);">2. Cantidad de Controles</h4>
+        <div class="selection-grid" id="ps5-controls">
+          <div class="selection-card" data-value="1 Control"><i class="fa-solid fa-gamepad"></i><h4>1 Control</h4></div>
+          <div class="selection-card" data-value="2 Controles"><i class="fa-solid fa-gamepad"></i><h4>2 Controles</h4></div>
+          <div class="selection-card" data-value="3 Controles"><i class="fa-solid fa-gamepad"></i><h4>3 Controles</h4></div>
+          <div class="selection-card" data-value="4 Controles"><i class="fa-solid fa-gamepad"></i><h4>4 Controles</h4></div>
+        </div>
+      </div>
+
+      <button class="btn-process btn-confirm-selection" data-type="ps5" style="width: 100%;"><i class="fa-solid fa-check"></i> Confirmar Selección</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE SELECCIÓN PC -->
+  <div class="modal-overlay" id="modal-select-pc">
+    <div class="modal-content selection-modal">
+      <button class="modal-close close-selection"><i class="fa-solid fa-xmark"></i></button>
+      <h3><i class="fa-solid fa-desktop"></i> Seleccionar PC Gamer</h3>
+      
+      <div class="selection-grid" id="pc-machines" style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));">
+        <div class="selection-card" data-value="PC Gamer 01"><i class="fa-solid fa-computer"></i><h4>PC 01</h4><span class="pc-status available">Disponible</span></div>
+        <div class="selection-card" data-value="PC Gamer 02"><i class="fa-solid fa-computer"></i><h4>PC 02</h4><span class="pc-status available">Disponible</span></div>
+        <div class="selection-card" data-value="PC Gamer 03"><i class="fa-solid fa-computer"></i><h4>PC 03</h4><span class="pc-status occupied">Ocupada</span></div>
+        <div class="selection-card" data-value="PC Gamer 04"><i class="fa-solid fa-computer"></i><h4>PC 04</h4><span class="pc-status available">Disponible</span></div>
+        <div class="selection-card" data-value="PC Gamer 05"><i class="fa-solid fa-computer"></i><h4>PC 05</h4><span class="pc-status available">Disponible</span></div>
+      </div>
+
+      <button class="btn-process btn-confirm-selection" data-type="pc" style="width: 100%;"><i class="fa-solid fa-check"></i> Confirmar Máquina</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE SELECCIÓN ARCADE -->
+  <div class="modal-overlay" id="modal-select-arcade">
+    <div class="modal-content selection-modal">
+      <button class="modal-close close-selection"><i class="fa-solid fa-xmark"></i></button>
+      <h3><i class="fa-solid fa-ghost"></i> Seleccionar Juego Arcade</h3>
+      
+      <div class="selection-grid" id="arcade-games" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+        <div class="selection-card" data-value="Pac-Man"><i class="fa-solid fa-ghost"></i><h4>Pac-Man</h4></div>
+        <div class="selection-card" data-value="Metal Slug"><i class="fa-solid fa-gun"></i><h4>Metal Slug</h4></div>
+        <div class="selection-card" data-value="Street Fighter II"><i class="fa-solid fa-hand-fist"></i><h4>Street Fighter II</h4></div>
+        <div class="selection-card" data-value="The King of Fighters"><i class="fa-solid fa-fire"></i><h4>King of Fighters</h4></div>
+        <div class="selection-card" data-value="Mortal Kombat"><i class="fa-solid fa-dragon"></i><h4>Mortal Kombat</h4></div>
+        <div class="selection-card" data-value="Galaga"><i class="fa-solid fa-rocket"></i><h4>Galaga</h4></div>
+        <div class="selection-card" data-value="Donkey Kong"><i class="fa-solid fa-banana"></i><h4>Donkey Kong</h4></div>
+        <div class="selection-card" data-value="Contra"><i class="fa-solid fa-crosshairs"></i><h4>Contra</h4></div>
+      </div>
+
+      <button class="btn-process btn-confirm-selection" data-type="arcade" style="width: 100%;"><i class="fa-solid fa-check"></i> Confirmar Juego</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE RESERVA FINAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-icon"><i class="fa-solid fa-gamepad"></i></div>
+      <h3>Confirm Reservation</h3>
+
+      <div class="modal-summary">
+        <div class="summary-row">
+          <span><i class="fa-solid fa-gamepad"></i> Estación:</span>
+          <span id="modalService">PS5</span>
+        </div>
+        <div class="summary-row" id="dynamicDetailRow" style="display: none;">
+          <span><i class="fa-solid fa-list"></i> Detalle:</span>
+          <span id="modalDetail">-</span>
+        </div>
+        <div class="summary-row">
+          <span><i class="fa-solid fa-burger"></i> Snacks/Combos:</span>
+          <span id="modalSnack">Sin snacks</span>
+        </div>
+        <div class="summary-row">
+          <span><i class="fa-regular fa-clock"></i> Hours:</span>
+          <span id="modalHours">2 h</span>
+        </div>
+      </div>
+
+      <div class="modal-total">
+        <span>Total:</span>
+        <span id="modalTotal">80 BOB</span>
+      </div>
+
+      <div class="timer-box">
+        <i class="fa-solid fa-stopwatch"></i> <span id="timerText">00:30s</span>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnCancelModal">Cancel</button>
+        <button class="btn-process" id="btnProcess"><i class="fa-solid fa-credit-card"></i> Process Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE PROMOCIONES -->
+  <div class="modal-overlay" id="modal-promos">
+    <div class="modal-content promo-modal">
+      <button class="modal-close close-promos"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-icon" style="border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,204,0,0.2);">
+        <i class="fa-solid fa-fire"></i>
+      </div>
+      <h3 style="color: var(--neon-yellow);">Promociones Especiales</h3>
+      <div class="promo-item">
+        <h4>🔥 2x1 en Horas</h4>
+        <p>Reserva 2 horas en cualquier consola y llévate 2 horas gratis. Válido de Lunes a Jueves.</p>
+        <span class="promo-code">Código: LEVEL2X1</span>
+      </div>
+      <div class="promo-item">
+        <h4>🍔 Combo Gamer Gratis</h4>
+        <p>Al reservar 3 horas o más, llévate un Combo Gamer sin costo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <div>
+      <h4>Reservation Confirmed</h4>
+      <p>Successfully!</p>
+    </div>
+    <button class="toast-close" id="btnCloseToast"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      
+      let basePrice = 40;
+      let currentStation = 'PS5';
+      let timerInterval = null;
+      let timeLeft = 30;
+
+      let selectionData = {
+        ps5: { game: null, controls: null },
+        pc: { machine: null },
+        arcade: { game: null }
+      };
+
+      // --- FUNCIÓN PARA CAMBIAR EL TEXTO DE LA PROMOCIÓN ---
+      function updatePromoText(station) {
+        let text1 = "", text2 = "";
+        if (station === 'PS5') {
+          text1 = "PROMO PS5: 2X1 EN HORAS";
+          text2 = "COMBO GAMER GRATIS EN PS5";
+        } else if (station === 'PC') {
+          text1 = "PROMO PC: 1 HORA GRATIS";
+          text2 = "TORNEO VALORANT ESTE VIERNES";
+        } else if (station === 'Arcade') {
+          text1 = "PROMO ARCADE: FICHAS X2";
+          text2 = "TORNEO STREET FIGHTER";
+        }
+        
+        // Actualizamos el HTML del marquee
+        $('#promoText').html(`
+          <span>${text1}</span>
+          <span>${text2}</span>
+          <span>${text1}</span>
+          <span>${text2}</span>
+        `);
+      }
+
+      // --- LÓGICA DE PROMOCIONES ---
+      $('#btnOpenPromos').on('click', function() {
+        $('#modal-promos').fadeIn(300);
+      });
+      
+      $('.close-promos').on('click', function() {
+        $('#modal-promos').fadeOut(300);
+      });
+
+      // --- LÓGICA DEL PANEL DERECHO (CALCULADORA vs ESPECIFICACIONES) ---
+      function showSpecs(type) {
+        $('#calculatorPanel').hide(); // Ocultar calculadora
+        $('.panel-content').hide(); // Ocultar todos los contenidos
+        
+        $('#panel-' + type).fadeIn(200); // Mostrar el contenido elegido
+        $('#specsPanel').addClass('active'); // Mostrar el panel de especificaciones
+        
+        // Cambiar el título del panel
+        let title = "";
+        let icon = "";
+        if (type === 'ps5') { title = "Especificaciones PS5"; icon = "fa-playstation"; }
+        if (type === 'pc') { title = "Especificaciones PC"; icon = "fa-desktop"; }
+        if (type === 'arcade') { title = "Especificaciones Arcade"; icon = "fa-ghost"; }
+        
+        $('#specsTitle').html(`<i class="fa-brands ${icon}"></i> ${title}`);
+      }
+
+      function hideSpecs() {
+        $('#specsPanel').removeClass('active'); // Ocultar panel de especificaciones
+        $('#calculatorPanel').fadeIn(200); // Mostrar calculadora de nuevo
+      }
+
+      $('#btnCloseSpecs').on('click', function() {
+        hideSpecs();
+      });
+
+      // 1. CLIC EN LA TARJETA (Abre el panel de specs y cambia promo)
+      $('.station-card__content').on('click', function () {
+        let card = $(this).closest('.station-card');
+        $('.station-card').removeClass('active');
+        card.addClass('active');
+        
+        basePrice = parseInt(card.data('price'));
+        currentStation = card.data('station').toUpperCase();
+        if(currentStation === 'ARCADE') currentStation = 'Arcade';
+        
+        calcularTotal();
+        let stationType = card.data('station');
+        
+        showSpecs(stationType); // Reemplaza la calculadora
+        updatePromoText(currentStation); // Cambia la promo
+      });
+
+      // 2. BOTÓN DE ESPECIFICACIONES (Hace lo mismo)
+      $('.btn-specs').on('click', function (e) {
+        e.stopPropagation();
+        let type = $(this).data('target');
+        
+        let card = $(this).closest('.station-card');
+        $('.station-card').removeClass('active');
+        card.addClass('active');
+        basePrice = parseInt(card.data('price'));
+        currentStation = card.data('station').toUpperCase();
+        if(currentStation === 'ARCADE') currentStation = 'Arcade';
+        calcularTotal();
+
+        // Si ya está abierto, lo cierra. Si no, lo abre.
+        if ($('#specsPanel').hasClass('active') && $('#panel-' + type).is(':visible')) {
+          hideSpecs();
+        } else {
+          showSpecs(type);
+          updatePromoText(currentStation);
+        }
+      });
+
+      // 3. BOTONES DE RENT HOUR (Abre modales flotantes de selección)
+      $('.btn-rent').on('click', function (e) {
+        e.stopPropagation();
+        
+        let card = $(this).closest('.station-card');
+        $('.station-card').removeClass('active');
+        card.addClass('active');
+        basePrice = parseInt(card.data('price'));
+        currentStation = card.data('station').toUpperCase();
+        if(currentStation === 'ARCADE') currentStation = 'Arcade';
+        calcularTotal();
+
+        let targetId = $(this).data('target');
+        $('#' + targetId).fadeIn(300);
+      });
+
+      $('.close-selection').on('click', function () {
+        $(this).closest('.modal-overlay').fadeOut(300);
+      });
+
+      // 4. LÓGICA DE SELECCIÓN EN TARJETAS
+      $('.selection-grid').on('click', '.selection-card', function () {
+        if ($(this).find('.pc-status.occupied').length) return;
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+      });
+
+      // 5. CONFIRMAR SELECCIÓN
+      $('.btn-confirm-selection').on('click', function () {
+        let type = $(this).data('type');
+        let modalId = '#modal-select-' + type;
+
+        if (type === 'ps5') {
+          let game = $('#ps5-games .selection-card.selected').data('value');
+          let controls = $('#ps5-controls .selection-card.selected').data('value');
+          if (!game || !controls) {
+            alert('Por favor, selecciona un videojuego y la cantidad de controles.');
+            return;
+          }
+          selectionData.ps5 = { game: game, controls: controls };
+        } 
+        else if (type === 'pc') {
+          let machine = $('#pc-machines .selection-card.selected').data('value');
+          if (!machine) {
+            alert('Por favor, selecciona una máquina disponible.');
+            return;
+          }
+          selectionData.pc = { machine: machine };
+        } 
+        else if (type === 'arcade') {
+          let game = $('#arcade-games .selection-card.selected').data('value');
+          if (!game) {
+            alert('Por favor, selecciona un juego arcade.');
+            return;
+          }
+          selectionData.arcade = { game: game };
+        }
+
+        $(modalId).fadeOut(300);
+
+        setTimeout(function() {
+          $('#btnConfirm').click();
+        }, 400);
+      });
+
+      // 6. CALCULADORA
+      $('#btnPlus').on('click', function () {
+        let val = parseInt($('#hoursInput').val()) || 1;
+        $('#hoursInput').val(val + 1);
+        calcularTotal();
+      });
+
+      $('#btnMinus').on('click', function () {
+        let val = parseInt($('#hoursInput').val()) || 1;
+        if (val > 1) {
+          $('#hoursInput').val(val - 1);
+          calcularTotal();
+        }
+      });
+
+      $('#snackSelect').on('change', function () {
+        calcularTotal();
+      });
+
+      function calcularTotal() {
+        let hours = parseInt($('#hoursInput').val()) || 1;
+        let snackPrice = parseInt($('#snackSelect').val()) || 0;
+        let total = (basePrice * hours) + snackPrice;
+        $('#totalDisplay').text(total + ' BOB');
+        return total;
+      }
+
+      // 7. MODAL DE RESERVA FINAL
+      $('#btnConfirm').on('click', function () {
+        let type = currentStation.toLowerCase();
+        if (type === 'ps5' && (!selectionData.ps5.game || !selectionData.ps5.controls)) {
+          alert('Debes configurar tu PS5 (juego y controles) antes de reservar. Haz clic en "Rent Hour".');
+          return;
+        }
+        if (type === 'pc' && !selectionData.pc.machine) {
+          alert('Debes seleccionar una máquina PC antes de reservar. Haz clic en "Rent Hour".');
+          return;
+        }
+        if (type === 'arcade' && !selectionData.arcade.game) {
+          alert('Debes seleccionar un juego Arcade antes de reservar. Haz clic en "Rent Hour".');
+          return;
+        }
+
+        let hours = $('#hoursInput').val();
+        let snackText = $('#snackSelect option:selected').text();
+        let total = calcularTotal();
+
+        $('#modalService').text(currentStation);
+        $('#modalSnack').text(snackText);
+        $('#modalHours').text(hours + ' h');
+        $('#modalTotal').text(total + ' BOB');
+
+        let $detailRow = $('#dynamicDetailRow');
+        let $detailText = $('#modalDetail');
+
+        if (type === 'ps5') {
+          $detailRow.show();
+          $detailText.text(selectionData.ps5.game + ' | ' + selectionData.ps5.controls);
+        } else if (type === 'pc') {
+          $detailRow.show();
+          $detailText.text(selectionData.pc.machine);
+        } else if (type === 'arcade') {
+          $detailRow.show();
+          $detailText.text(selectionData.arcade.game);
+        } else {
+          $detailRow.hide();
+        }
+
+        $('#modal').fadeIn(300);
+        iniciarTemporizador();
+      });
+
+      // 8. TEMPORIZADOR Y PAGO
+      function iniciarTemporizador() {
+        clearInterval(timerInterval);
+        timeLeft = 30;
+        $('#timerText').text('00:' + timeLeft + 's');
+
+        timerInterval = setInterval(function () {
+          timeLeft--;
+          $('#timerText').text('00:' + (timeLeft < 10 ? '0' : '') + timeLeft + 's');
+
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            cerrarModal();
+            alert('⏰ Tiempo de confirmación expirado.');
+          }
+        }, 1000);
+      }
+
+      function cerrarModal() {
+        $('#modal').fadeOut(300);
+        clearInterval(timerInterval);
+      }
+
+      $('#btnCloseModal, #btnCancelModal').on('click', function () {
+        cerrarModal();
+      });
+
+      $('#btnProcess').on('click', function () {
+        clearInterval(timerInterval);
+        $('#modal').fadeOut(300);
+        $('#toast').fadeIn(300).delay(4000).fadeOut(300);
+      });
+
+      $('#btnCloseToast').on('click', function () {
+        $('#toast').fadeOut(300);
+      });
+
+      $('.modal-overlay').on('click', function(e) {
+        if (e.target === this) {
+          $(this).fadeOut(300);
+          if ($(this).attr('id') === 'modal') clearInterval(timerInterval);
+        }
+      });
+
+      // Inicializar con PS5 activo y su promo
+      updatePromoText('PS5');
+      calcularTotal();
+    });
+  </script>
+</body>
+</html>
